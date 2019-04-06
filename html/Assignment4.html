@@ -1,0 +1,246 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Assignment 4: Circuit Modelling</title><meta name="generator" content="MATLAB 9.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-04-06"><meta name="DC.source" content="Assignment4.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Assignment 4: Circuit Modelling</h1><!--introduction--><p>Tyler Armstrong 101009324</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Introduction</a></li><li><a href="#2">Part 1: Constant Input Voltage</a></li><li><a href="#5">Part 2: Transient Case</a></li><li><a href="#7">Part 3: Noise</a></li><li><a href="#11">Part 4: Nonlinear Elements</a></li></ul></div><h2 id="1">Introduction</h2><p>The goal of this assignment was to model an RLC circuit, and use modified nodal analysis to find the node voltages and currents in the circuit. The equation used to calculate these is:</p><p><img src="Assignment4_eq02977794681099159525.png" alt="$$V_j = A^{-1}(C\frac{V_{j-1}}{\Delta t}+F(t_j)-B(V_j))$$"></p><p>Where <img src="Assignment4_eq02739270504201626537.png" alt="$V$"> is the vector of node voltages and currents, <img src="Assignment4_eq07365524530707038546.png" alt="$G$"> contains the coefficients of non-derivative terms, <img src="Assignment4_eq03986222445007418011.png" alt="$C$"> contains the coefficients of 1st order time derivative terms, <img src="Assignment4_eq10170753361147586657.png" alt="$B$"> contains any nonlinear terms, <img src="Assignment4_eq12023782566688451389.png" alt="$F(t)$"> is the input from any independent sources, and <img src="Assignment4_eq05147331747641807187.png" alt="$A$"> is:</p><p><img src="Assignment4_eq03672964227492461522.png" alt="$$A = \frac{C}{\Delta t}+G$$"></p><p>The circuit simulated in this assignment contains only linear elements, so the <img src="Assignment4_eq10170753361147586657.png" alt="$B$"> matrix is zero. <img src="Assignment4_eq09163420564292285807.png" alt="$V_0$"> is known, so the equation can be solved by iterating over <img src="Assignment4_eq07225361342133155126.png" alt="$j$">.</p><h2 id="2">Part 1: Constant Input Voltage</h2><p>In this section, the circuit will be simulated with a constant input voltage. The voltage was swept from -10V to 10V, and a plot was made of the node voltages at node 3 and node 5 (the output voltage). A second plot was made by sweeping the frequency for a constant AC voltage of 1V. The two plots are shown below.</p><pre class="codeinput">A4MNA1;
+</pre><img vspace="5" hspace="5" src="Assignment4_01.png" alt=""> <img vspace="5" hspace="5" src="Assignment4_02.png" alt=""> <p>The order of the variables in the matrices is <img src="Assignment4_eq11715042667819846136.png" alt="$V_1$">, <img src="Assignment4_eq16059942803751802368.png" alt="$I_s$">, <img src="Assignment4_eq15081432794253854583.png" alt="$V_2$">, <img src="Assignment4_eq13214322592048034531.png" alt="$V_3$">, <img src="Assignment4_eq13739370562136357191.png" alt="$I_L$">, <img src="Assignment4_eq14097737433784497664.png" alt="$I_\alpha$">, <img src="Assignment4_eq15161861662781953732.png" alt="$V_4$">, and <img src="Assignment4_eq07127278336459387672.png" alt="$V_5$">. The matrices are:</p><pre class="codeinput">disp(G);
+</pre><pre class="codeoutput">  Columns 1 through 7
+
+    1.0000         0         0         0         0         0         0
+    1.0000    1.0000   -1.0000         0         0         0         0
+         0         0    1.0000   -1.0000         0         0         0
+   -1.0000         0    1.5000         0    1.0000         0         0
+         0         0         0    0.1000   -1.0000         0         0
+         0         0         0  -10.0000         0         0    1.0000
+         0         0         0         0         0    1.0000   10.0000
+         0         0         0         0         0         0  -10.0000
+
+  Column 8
+
+         0
+         0
+         0
+         0
+         0
+         0
+  -10.0000
+   10.0010
+
+</pre><pre class="codeinput">disp(C);
+<span class="comment">%</span>
+</pre><pre class="codeoutput">  Columns 1 through 7
+
+         0         0         0         0         0         0         0
+    0.2500         0   -0.2500         0         0         0         0
+         0         0         0         0   -0.2000         0         0
+   -0.2500         0    0.2500         0         0         0         0
+         0         0         0         0         0         0         0
+         0         0         0         0         0         0         0
+         0         0         0         0         0         0         0
+         0         0         0         0         0         0         0
+
+  Column 8
+
+         0
+         0
+         0
+         0
+         0
+         0
+         0
+         0
+
+</pre><h2 id="5">Part 2: Transient Case</h2><p>In this section, the circuit is simulated with three different time-varying input signals.</p><div><ul><li>A 1V step function, with a delay at 0.03s</li><li>A 1V sine wave, with a frequency of 33.333Hz</li><li>A 1V Gaussian pulse with a delay of 0.06s and a standard deviation of 0.03s</li></ul></div><p>The plots of the output voltage and the frequency spectrum for each signal are shown below. In the voltage plots, the input function is shown in blue, and the output is in red.</p><pre class="codeinput">A4MNA2;
+</pre><img vspace="5" hspace="5" src="Assignment4_03.png" alt=""> <img vspace="5" hspace="5" src="Assignment4_04.png" alt=""> <img vspace="5" hspace="5" src="Assignment4_05.png" alt=""> <img vspace="5" hspace="5" src="Assignment4_06.png" alt=""> <img vspace="5" hspace="5" src="Assignment4_07.png" alt=""> <img vspace="5" hspace="5" src="Assignment4_08.png" alt=""> <p>As expected, the sine wave's frequency spectrum has peaks at <img src="Assignment4_eq01088791601138199339.png" alt="$\pm f$">. The step function has a delta function at the centre, combined with a sinc function. The spectrum of the Gaussian pulse is also Gaussian. There is very little distortion in the signals.</p><h2 id="7">Part 3: Noise</h2><p>In this section, a capacitor <img src="Assignment4_eq09575276543122447654.png" alt="$C_n$"> and a current source <img src="Assignment4_eq01728352231255427332.png" alt="$I_n$"> were added in parallel with <img src="Assignment4_eq14076053066783365554.png" alt="$R_3$">. This models the noise of the signal across the resistor. <img src="Assignment4_eq01728352231255427332.png" alt="$I_n$"> had a magnitude of 1mA, with a Gaussian distribution. The plots of the output voltage and its frequency spectrum are given below.</p><pre class="codeinput">A4MNA3;
+</pre><img vspace="5" hspace="5" src="Assignment4_09.png" alt=""> <img vspace="5" hspace="5" src="Assignment4_10.png" alt=""> <p>There is significant noise visible in both plots.</p><p>The new C matrix is:</p><pre class="codeinput">disp(C);
+</pre><pre class="codeoutput">  Columns 1 through 7
+
+         0         0         0         0         0         0         0
+    0.2500         0   -0.2500         0         0         0         0
+         0         0         0         0   -0.2000         0         0
+   -0.2500         0    0.2500         0         0         0         0
+         0         0         0    0.0000         0         0         0
+         0         0         0         0         0         0         0
+         0         0         0         0         0         0         0
+         0         0         0         0         0         0         0
+
+  Column 8
+
+         0
+         0
+         0
+         0
+         0
+         0
+         0
+         0
+
+</pre><p>The G matrix was unchanged.</p><p>The following two plots show the effects of varying the time step and the noise capacitor from their original values.</p><pre class="codeinput">A4MNA4;
+</pre><img vspace="5" hspace="5" src="Assignment4_11.png" alt=""> <img vspace="5" hspace="5" src="Assignment4_12.png" alt=""> <p>The output voltage curves for <img src="Assignment4_eq09575276543122447654.png" alt="$C_n$"> and <img src="Assignment4_eq07940946277930441298.png" alt="$10C_n$"> are not visible behind the <img src="Assignment4_eq10155780803065390637.png" alt="$0.1C_n$"> curve, so the noise appears to increase as <img src="Assignment4_eq09575276543122447654.png" alt="$C_n$"> decreases.</p><p>Reducing the time step by a factor of 10 increased the output voltage by approximately the same factor. This makes the choice of time step very important when designing a simulation.</p><h2 id="11">Part 4: Nonlinear Elements</h2><p>If the current <img src="Assignment4_eq14097737433784497664.png" alt="$I_\alpha$"> is a nonlinear function, the simulation here no longer works. To fix this, the <img src="Assignment4_eq10170753361147586657.png" alt="$B$"> matrix would need to include the equation for <img src="Assignment4_eq14097737433784497664.png" alt="$I_\alpha$">. Since the <img src="Assignment4_eq10170753361147586657.png" alt="$B$"> matrix is now non-zero, the variables at each step need to be calculated using a root-finding algorithm.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2018b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Assignment 4: Circuit Modelling
+% Tyler Armstrong
+% 101009324
+%
+%% Introduction
+%
+% The goal of this assignment was to model an RLC circuit, and use 
+% modified nodal analysis to find the node voltages and currents in the 
+% circuit. The equation used to calculate these is:
+%
+% $$V_j = A^{-1}(C\frac{V_{j-1}}{\Delta t}+F(t_j)-B(V_j))$$
+%
+% Where $V$ is the vector of node voltages and currents, $G$ contains the
+% coefficients of non-derivative terms, $C$ contains the coefficients of
+% 1st order time derivative terms, $B$ contains any nonlinear terms, $F(t)$
+% is the input from any independent sources, and $A$ is:
+%
+% $$A = \frac{C}{\Delta t}+G$$
+%
+% The circuit simulated in this assignment contains only linear elements,
+% so the $B$ matrix is zero. $V_0$ is known, so the equation can be solved
+% by iterating over $j$.
+%
+%% Part 1: Constant Input Voltage
+%
+% In this section, the circuit will be simulated with a constant input
+% voltage. The voltage was swept from -10V to 10V, and a plot was made of
+% the node voltages at node 3 and node 5 (the output voltage). A second
+% plot was made by sweeping the frequency for a constant AC voltage of 1V.
+% The two plots are shown below. 
+%
+A4MNA1;
+%%
+%
+% The order of the variables in the matrices is $V_1$, $I_s$, $V_2$, $V_3$,
+% $I_L$, $I_\alpha$, $V_4$, and $V_5$. The matrices are: 
+%
+disp(G);
+%%
+%
+disp(C);
+%
+%% Part 2: Transient Case
+%
+% In this section, the circuit is simulated with three different
+% time-varying input signals. 
+%
+% * A 1V step function, with a delay at 0.03s
+% * A 1V sine wave, with a frequency of 33.333Hz
+% * A 1V Gaussian pulse with a delay of 0.06s and a standard deviation of
+% 0.03s
+%
+% The plots of the output voltage and the frequency spectrum for each
+% signal are shown below. In the voltage plots, the input function is shown
+% in blue, and the output is in red. 
+%
+A4MNA2;
+%%
+%
+% As expected, the sine wave's frequency spectrum has peaks at $\pm f$. The
+% step function has a delta function at the centre, combined with a sinc
+% function. The spectrum of the Gaussian pulse is also Gaussian. There is
+% very little distortion in the signals. 
+%
+%% Part 3: Noise
+%
+% In this section, a capacitor $C_n$ and a current source $I_n$ were added
+% in parallel with $R_3$. This models the noise of the signal across the
+% resistor. $I_n$ had a magnitude of 1mA, with a Gaussian distribution. The
+% plots of the output voltage and its frequency spectrum are given below.
+%
+A4MNA3;
+%%
+% There is significant noise visible in both plots.
+%
+% The new C matrix is:
+%
+disp(C);
+%%
+% The G matrix was unchanged. 
+%
+% The following two plots show the effects of varying the time step and the
+% noise capacitor from their original values. 
+%
+A4MNA4;
+%%
+% The output voltage curves for $C_n$ and $10C_n$ are not visible behind
+% the $0.1C_n$ curve, so the noise appears to increase as $C_n$ decreases. 
+%
+% Reducing the time step by a factor of 10 increased the output voltage by
+% approximately the same factor. This makes the choice of time step very 
+% important when designing a simulation.
+%
+%% Part 4: Nonlinear Elements
+%
+% If the current $I_\alpha$ is a nonlinear function, the simulation here no
+% longer works. To fix this, the $B$ matrix would need to include the
+% equation for $I_\alpha$. Since the $B$ matrix is now non-zero, the
+% variables at each step need to be calculated using a root-finding
+% algorithm. 
+##### SOURCE END #####
+--></body></html>
